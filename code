@@ -1,0 +1,152 @@
+import java.io.*;
+import java.sql.*;
+import java.util.Scanner;
+
+public class ExceptionHandlingExamples {
+
+    public static void main(String[] args) {
+        // Simulate each exception one by one
+        handleIOException();
+        handleFileNotFoundException();
+        handleEOFException();
+        handleSQLException();
+        handleClassNotFoundException();
+
+        handleArithmeticException();
+        handleNullPointerException();
+        handleArrayIndexOutOfBoundsException();
+        handleClassCastException();
+        handleIllegalArgumentException();
+        handleNumberFormatException();
+    }
+
+    // ================= Checked Exceptions ================= //
+
+    // 1. IOException
+    public static void handleIOException() {
+        System.out.println("\n1. Handling IOException Example:");
+        File file = new File("nonexistent_file.txt");
+
+        try (FileReader reader = new FileReader(file)) {
+            System.out.println("Reading file...");
+        } catch (IOException e) {
+            System.out.println("IOException caught: " + e.getMessage());
+        }
+    }
+
+    // 2. FileNotFoundException
+    public static void handleFileNotFoundException() {
+        System.out.println("\n2. Handling FileNotFoundException Example:");
+        try {
+            FileReader fileReader = new FileReader("file_that_does_not_exist.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("FileNotFoundException caught: " + e.getMessage());
+        }
+    }
+
+    // 3. EOFException
+    public static void handleEOFException() {
+        System.out.println("\n3. Handling EOFException Example:");
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("test.dat"))) {
+            inputStream.readObject(); // Try reading an empty or corrupted file
+        } catch (EOFException e) {
+            System.out.println("EOFException caught: End of file reached unexpectedly.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Exception caught: " + e.getMessage());
+        }
+    }
+
+    // 4. SQLException
+    public static void handleSQLException() {
+        System.out.println("\n4. Handling SQLException Example:");
+        try {
+            // Attempt to connect to a non-existent database
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/invalidDB", "root", "password");
+            Statement stmt = conn.createStatement();
+            stmt.executeQuery("SELECT * FROM nonexistent_table");
+        } catch (SQLException e) {
+            System.out.println("SQLException caught: " + e.getMessage());
+        }
+    }
+
+    // 5. ClassNotFoundException
+    public static void handleClassNotFoundException() {
+        System.out.println("\n5. Handling ClassNotFoundException Example:");
+        try {
+            Class.forName("com.nonexistent.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("ClassNotFoundException caught: " + e.getMessage());
+        }
+    }
+
+    // ================= Unchecked Exceptions ================= //
+
+    // 6. ArithmeticException
+    public static void handleArithmeticException() {
+        System.out.println("\n6. Handling ArithmeticException Example:");
+        try {
+            int result = 10 / 0; // Division by zero
+        } catch (ArithmeticException e) {
+            System.out.println("ArithmeticException caught: " + e.getMessage());
+        }
+    }
+
+    // 7. NullPointerException
+    public static void handleNullPointerException() {
+        System.out.println("\n7. Handling NullPointerException Example:");
+        String str = null;
+        try {
+            System.out.println(str.length());
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException caught: " + e.getMessage());
+        }
+    }
+
+    // 8. ArrayIndexOutOfBoundsException
+    public static void handleArrayIndexOutOfBoundsException() {
+        System.out.println("\n8. Handling ArrayIndexOutOfBoundsException Example:");
+        int[] array = {1, 2, 3};
+        try {
+            System.out.println(array[5]); // Invalid index
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayIndexOutOfBoundsException caught: " + e.getMessage());
+        }
+    }
+
+    // 9. ClassCastException
+    public static void handleClassCastException() {
+        System.out.println("\n9. Handling ClassCastException Example:");
+        try {
+            Object obj = new Integer(10);
+            String str = (String) obj; // Invalid cast
+        } catch (ClassCastException e) {
+            System.out.println("ClassCastException caught: " + e.getMessage());
+        }
+    }
+
+    // 10. IllegalArgumentException
+    public static void handleIllegalArgumentException() {
+        System.out.println("\n10. Handling IllegalArgumentException Example:");
+        try {
+            setAge(-5); // Passing invalid argument
+        } catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgumentException caught: " + e.getMessage());
+        }
+    }
+
+    public static void setAge(int age) {
+        if (age < 0) {
+            throw new IllegalArgumentException("Age cannot be negative.");
+        }
+    }
+
+    // 11. NumberFormatException
+    public static void handleNumberFormatException() {
+        System.out.println("\n11. Handling NumberFormatException Example:");
+        try {
+            int number = Integer.parseInt("invalidNumber"); // Invalid conversion
+        } catch (NumberFormatException e) {
+            System.out.println("NumberFormatException caught: " + e.getMessage());
+        }
+    }
+}
